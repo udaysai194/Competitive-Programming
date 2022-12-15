@@ -2,12 +2,21 @@
 using namespace std;
 
 
-int solve() {
-	
+string solve() {
+
+	int n;
+	cin >> n;
 	string s;
 	cin >> s;
-	return (s.size()-1) * 9 + (s[0] - '0');
+	set<pair<char, char>> set1;
 
+	for(int i = 0; i <= n-2; i++) {
+		pair<char, char> temp = {s[i], s[i+1]};
+		if(set1.find(temp) != set1.end())	return "YES";
+		if(i > 0)							set1.insert({s[i-1], s[i]});
+	}
+	
+	return "NO";
 }
 
 int main() {
