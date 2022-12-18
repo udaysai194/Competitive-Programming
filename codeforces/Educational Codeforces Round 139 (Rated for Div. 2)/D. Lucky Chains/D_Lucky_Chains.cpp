@@ -1,36 +1,70 @@
-#include<bits/stdc++.h>
+#include<iostream>
+#include<vector>
+#include<math.h>
+#include<limits.h>
+#include <algorithm>
 using namespace std;
 
-int smallestPrimeFactor[10000005];
+long long N = 10000005;
+vector<long long> smallestPrimeFactor(N+1, 1);
 
 void preComputeSmallestPrimeFactors() {
-    memset(smallestPrimeFactor, sizeof(smallestPrimeFactor), 1);
 
-    int sqrtN = sqrt(10000);
-    for(int i = 2; i <= sqrtN; i++) {
-        for(int j = i+i; j < 10000005; j += i) {
-            smallestPrimeFactor[j] = i;
+    for(long long i = 2; i <= N; i++) {
+        if(smallestPrimeFactor[i] == 1) {
+            smallestPrimeFactor[i] = i;
+            for(long long j = i*i; j <= N; j += i) {
+                if(smallestPrimeFactor[j] == 1) smallestPrimeFactor[j] = i;
+            }
         }
     }
+    
 }
 
-int solve() {
-    int x, y;
+vector<long long> factorize(long long num) {
+
+    vector<long long> factors;
+
+    while(num > 1) {
+        long long factor = smallestPrimeFactor[num];
+        while(num % factor == 0) {
+            num /= factor;
+        }
+
+        factors.push_back(factor);
+    }
+
+    return factors;
+}
+
+long long solve() {
+    long long x, y;
     cin >> x >> y;
 
     if(__gcd(x, y) != 1)    return 0;
-    if(abs(x-y) == 1)       return -1;
     if(x > y)               swap(x, y);
-    
-    int diff = y-x;
-    preComputeSmallestPrimeFactors();
-    //vector<int> primeFactors = factorize(diff);
-    
 
+    long long diff = y-x;
+    if(diff == 1)           return -1;
+    
+    vector<long long> primeFactors = factorize(diff);
+
+    long long longestSequenceLength = LLONG_MAX;
+
+    for(auto pf : primeFactors) {
+        longestSequenceLength = min(longestSequenceLength, pf - (x%pf));
+    }
+    
+    return longestSequenceLength;
 }
 
 int main() {
-	int t;
+    ios_base::sync_with_stdio(false);
+    cin.tie(NULL);
+    
+    preComputeSmallestPrimeFactors();
+
+	long long t;
 	cin >> t;
 
 	while(t--) {
