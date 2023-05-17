@@ -22,7 +22,7 @@ void solve() {
         //cout << invertedNum << endl;
         if(num % 10 >= 5)                           invertedNum += 9 - num%10;
         else                                        invertedNum += num%10;
-        if(num/10 == 0 && invertedNum%10 == 0)      invertedNum += 9;              
+        if(num/10 == 0 && invertedNum%10 == 0)      invertedNum /= 10;              
         num = num/10;
     }
 
